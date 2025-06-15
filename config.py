@@ -99,8 +99,12 @@ DATASET_CONFIG = {
 OPTIMIZATION_PARAMS = {
     "total_optimization_steps": 6,
     "candidates_per_step": 4, # 论文中的 N
-    "optimizer_algorithm": "ucb1",
+    "optimizer_algorithm": "dap_ucb",
     "ucb1_exploration_constant": 2.0, # 论文中的 c=sqrt(2)
+    
+    # DAP-UCB 专用参数
+    "dap_patience_M": 4, # 停滞容忍轮数
+    "dap_improvement_delta": 0.005, # 最小改进阈值 (0.5%)
 }
 
 # --- Experiment and Logging Configurations ---
