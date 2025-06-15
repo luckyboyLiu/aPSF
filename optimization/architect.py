@@ -27,7 +27,7 @@ Here is an example instance of the task:
 {example}
 --- END EXAMPLE ---
 
-Based on the task, identify the essential factors that a language model would need to generate a high-quality response. For each factor, provide a descriptive name and a brief, initial placeholder text.
+Based on the task, identify 2 to 6 essential, distinct, non-overlapping semantic factors that a language model would need to generate a high-quality response. For each factor, provide a descriptive name and a brief, initial placeholder text. Crucially, keep the initial content for each factor concise and to the point, ideally under 80 words, as it will be optimized later.
 
 The output should be in a structured format, like this:
 
@@ -56,6 +56,20 @@ Common factors include, but are not limited to: 'Instruction', 'Rationale', 'Exa
         
         factors = self._parse_structure_response(response)
         
+        # 限制因子数量在 2 到 6 之间
+        items = list(factors.items())
+        if len(items) > 6:
+            items = items[:6]
+        if len(items) < 2:
+            default = {
+                "Instruction": f"Solve the following task: {task_description}",
+                "Rationale": "Think step-by-step to reach the solution."
+            }
+            for k, v in default.items():
+                if k not in factors and len(items) < 2:
+                    items.append((k, v))
+        factors = dict(items)
+
         if not factors:
             print("Warning: Architect did not return a valid structure. Using a default fallback.")
             factors = {
@@ -76,4 +90,4 @@ Common factors include, but are not limited to: 'Instruction', 'Rationale', 'Exa
         for name, content in matches:
             factors[name.strip()] = content.strip()
             
-        return factors 
+        return factors
