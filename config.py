@@ -97,8 +97,8 @@ DATASET_CONFIG = {
 
 # --- aPSF Optimization Hyperparameters ---
 OPTIMIZATION_PARAMS = {
-    "total_optimization_steps": 100,
-    "candidates_per_step": 5, # 论文中的 N
+    "total_optimization_steps": 6,
+    "candidates_per_step": 4, # 论文中的 N
     "optimizer_algorithm": "ucb1",
     "ucb1_exploration_constant": 2.0, # 论文中的 c=sqrt(2)
 }

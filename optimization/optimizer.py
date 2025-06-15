@@ -27,20 +27,29 @@ class Optimizer:
         self.total_steps = 0
         self.ucb_c = OPTIMIZATION_PARAMS.get("ucb1_exploration_constant", 2.0)
         self.candidates_per_step = OPTIMIZATION_PARAMS.get("candidates_per_step", 5)
+        
+        self.dap_patience_M = OPTIMIZATION_PARAMS.get("dap_patience_M", 4)
+        self.dap_improvement_delta = OPTIMIZATION_PARAMS.get("dap_improvement_delta", 0.005) # 0.5%
 
     def _select_factor_to_optimize(self) -> str:
-        """使用 UCB1 算法选择下一个要优化的因子。"""
-        if self.total_steps < len(self.prompt_struct.get_factor_names()):
-            # 在初始阶段，确保每个因子至少被选择一次
-            return self.prompt_struct.get_factor_names()[self.total_steps]
+        """使用 DAP-UCB 算法选择下一个要优化的、未被冻结的因子。"""
+        active_factors = {
+            name: stats for name, stats in self.prompt_struct.factor_stats.items()
+            if not stats["is_frozen"]
+        }
+
+        if not active_factors:
+            return None # 所有因子都被冻结
+
+        # 在初始阶段，确保每个活动因子至少被选择一次
+        unexplored_factors = [name for name, stats in active_factors.items() if stats["selections"] == 0]
+        if unexplored_factors:
+            return random.choice(unexplored_factors)
 
         best_factor = None
         max_ucb_score = -1
 
-        for name, stats in self.prompt_struct.factor_stats.items():
-            if stats["selections"] == 0:
-                return name # 优先选择从未被选过的
-            
+        for name, stats in active_factors.items():
             avg_score = stats["score"] / stats["selections"]
             exploration_bonus = self.ucb_c * math.sqrt(math.log(self.total_steps) / stats["selections"])
             ucb_score = avg_score + exploration_bonus
@@ -98,9 +107,14 @@ Output each new version separated by '--- CANDIDATE ---'. Do not include the fac
         return score
 
     def step(self):
-        """执行 aPSF 的一个完整优化步骤。"""
+        """执行 aPSF 的一个完整优化步骤，包含 DAP-UCB 逻辑。"""
         # 1. 选择因子
         factor_to_optimize = self._select_factor_to_optimize()
+        
+        if factor_to_optimize is None:
+            print("All factors are frozen. Optimization complete.")
+            return "COMPLETED"
+
         print(f"Step {self.total_steps + 1}: Optimizing factor '{factor_to_optimize}'...")
 
         # 2. 生成候选
@@ -111,24 +125,41 @@ Output each new version separated by '--- CANDIDATE ---'. Do not include the fac
             return
 
         # 3. 评估候选
-        best_candidate = self.prompt_struct.factors[factor_to_optimize]
-        best_score = -1
+        best_candidate_content = self.prompt_struct.factors[factor_to_optimize]
+        best_score_this_step = -1
 
         for candidate in candidates:
             score = self._evaluate_candidate(factor_to_optimize, candidate)
             print(f"  - Candidate for '{factor_to_optimize}' got score: {score:.4f}")
-            if score > best_score:
-                best_score = score
-                best_candidate = candidate
+            if score > best_score_this_step:
+                best_score_this_step = score
+                best_candidate_content = candidate
 
-        # 4. 更新
-        # 更新 UCB 统计数据
+        # 4. 更新 DAP-UCB 统计数据
         stats = self.prompt_struct.factor_stats[factor_to_optimize]
-        stats["score"] += best_score
+        previous_best_score = stats["best_score"]
+
+        # 检查是否有改进
+        if best_score_this_step > previous_best_score:
+            improvement = best_score_this_step - previous_best_score
+            stats["max_improvement"] = max(stats["max_improvement"], improvement)
+            stats["best_score"] = best_score_this_step
+            stats["patience_counter"] = 0
+            print(f"  -> Improvement found for '{factor_to_optimize}'. New best score: {best_score_this_step:.4f}")
+        else:
+            stats["patience_counter"] += 1
+            print(f"  -> No improvement. Patience: {stats['patience_counter']}/{self.dap_patience_M}")
+
+        # 更新 UCB1 基础统计
+        stats["score"] += best_score_this_step
         stats["selections"] += 1
         self.total_steps += 1
 
+        # 检查是否需要冻结
+        if stats["patience_counter"] >= self.dap_patience_M and stats["max_improvement"] < self.dap_improvement_delta:
+            stats["is_frozen"] = True
+            print(f"!!! Factor '{factor_to_optimize}' has been frozen due to stagnation.")
+
         # 如果找到了更好的版本，则更新提示结构
-        # 实际应用中可以设置一个阈值，避免因噪声而频繁变动
-        self.prompt_struct.update_factor(factor_to_optimize, best_candidate)
-        print(f"-> Updated '{factor_to_optimize}' with new content (score: {best_score:.4f}).\n") 
+        self.prompt_struct.update_factor(factor_to_optimize, best_candidate_content)
+        print(f"-> Updated '{factor_to_optimize}' content (best score this step: {best_score_this_step:.4f}).\n") 

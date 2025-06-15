@@ -15,16 +15,27 @@ class PromptStructure:
         """
         self.task_description = task_description
         self.factors = factors if factors else {}
-        # 用于 UCB1 算法的统计数据
+        # 为 UCB 和 DAP-UCB 算法初始化统计数据
         self.factor_stats = {
-            name: {"selections": 0, "score": 0.0} for name in self.factors
+            name: self._create_initial_stats() for name in self.factors
+        }
+
+    def _create_initial_stats(self) -> Dict:
+        """为单个因子创建初始统计信息字典。"""
+        return {
+            "selections": 0,          # (UCB1) 被选择次数
+            "score": 0.0,             # (UCB1) 累积得分
+            "best_score": -1.0,       # (DAP-UCB) 历史最佳得分
+            "max_improvement": 0.0,   # (DAP-UCB) 最大提升幅度 Δ_k
+            "patience_counter": 0,    # (DAP-UCB) 停滞计数器
+            "is_frozen": False        # (DAP-UCB) 是否被冻结
         }
 
     def add_factor(self, name: str, content: str):
         """添加一个新的因子。"""
         if name not in self.factors:
             self.factors[name] = content
-            self.factor_stats[name] = {"selections": 0, "score": 0.0}
+            self.factor_stats[name] = self._create_initial_stats()
 
     def update_factor(self, name: str, new_content: str):
         """更新一个已存在因子的内容。"""
