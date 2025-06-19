@@ -2,26 +2,34 @@
 # It's recommended to use environment variables for API keys for security.
 # For example: os.getenv("OPENAI_API_KEY")
 API_KEYS = {
-    "openai": "sk-...",  # 替换为您的 OpenAI API 密钥
+    "openai": "YOUR_OPENAI_API_KEY",  # 对于本地vLLM可以留空或任意字符串
     "google": "YOUR_GOOGLE_API_KEY",  # 替换为您的 Google API 密钥
     "openrouter": "YOUR_OPENROUTER_API_KEY", # 可选，用于访问多种模型
+}
+
+# --- 自定义 API 端点 ---
+API_BASE_URLS = {
+    "qwen_vllm": "http://localhost:8000/v1" # vLLM OpenAI 兼容端点
 }
 
 # --- Model Definitions for Experiments ---
 # 论文中使用的模型
 MODELS = {
-    # Architect/Optimizer: 用于发现结构和生成候选提示的强大模型
+    # Architect/Optimizer: 使用您通过 vLLM 部署的 Qwen-2.5
     "architect": {
-        "provider": "openai",
-        "model_name": "gpt-4",
+        "provider": "openai", # 使用我们修改过的 OpenAI 兼容 provider
+        "api_base_id": "qwen_vllm", # 引用上面的 vLLM 端点
+        "model_name": "/workspace/lhy/Qwen2.5-VL-7B-Instruct", # 在vLLM中加载的模型名称/路径
         "temperature": 0.7,
         "top_p": 1.0,
     },
-    # Worker/Scorer: 被优化的、执行任务的模型
+    # Worker/Scorer: 使用本地的 Llama-2 模型
     "worker": {
-        "provider": "google",
-        "model_name": "models/text-bison-001", # PaLM 2
+        "provider": "llama_local", # 使用我们实现的本地加载器
+        "model_name": "/workspace/lhy/Llama-2-7b-chat-hf", # 本地模型路径
         "temperature": 0.0,
+        # 为本地模型添加生成参数 (可选, 但建议)
+        "max_new_tokens": 512, # 限制生成长度
     },
     # 用于跨模型泛化测试的模型
     "generalization_test_model": {
