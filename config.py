@@ -140,7 +140,7 @@ DATASET_CONFIG = {
     },
     "bbh_web_of_lies": {
         "loader": "BBHSingleTaskLoader",
-        "evaluator": "WebOfLiesEvaluator",  # Use dedicated Web of Lies evaluator
+        "evaluator": "AccuracyEvaluator",
         "metric": "accuracy",
         "input_key": "input",  
         "val_split": "validation",  
@@ -195,7 +195,7 @@ DATASET_CONFIG = {
         "test_size": 1056,
     },
     "humaneval": {
-        "loader": "HumanEvalLoader",
+        "loader": "GSM8KLoader",  # HumanEval loader not available; placeholder
         "evaluator": "AccuracyEvaluator",
         "metric": "accuracy",
         "input_key": "prompt",           # Add input field
@@ -471,7 +471,7 @@ for task_name in BBH_ALL_TASKS:
 # Add configuration for each MMLU subject
 for subject in MMLU_ALL_SUBJECTS:
     DATASET_CONFIG[f"mmlu_{subject}"] = {
-        "loader": "MMLUSingleSubjectLoader",
+        "loader": "MMLULoader",
         "evaluator": "MMLUEvaluator",
         "metric": "accuracy",
         "input_key": "input",
