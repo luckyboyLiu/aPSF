@@ -1,0 +1,110 @@
+import json
+import os
+import glob
+import random
+from typing import Dict, List, Any
+from .base_loader import BaseLoader
+from ..config import DATA_PATHS
+
+class BBHMultiTaskLoader(BaseLoader):
+    """Load all tasks from Big-Bench Hard (BBH) dataset, supports multi-task evaluation."""
+    
+    def __init__(self, path: str = None):
+        """
+        Initialize BBH multi-task loader
+        Args:
+            path: Data path, use default path if None
+        """
+        self.path = path or DATA_PATHS.get("bbh_hard", "data/BIG-Bench-Hard-data")
+        super().__init__()
+    
+    def _load_data(self):
+        """Load all BBH task data"""
+        if not os.path.exists(self.path):
+            raise FileNotFoundError(f"BBH data path does not exist: {self.path}")
+        
+        # Get all JSON files
+        json_files = glob.glob(os.path.join(self.path, "*.json"))
+        
+        if not json_files:
+            raise FileNotFoundError(f"No JSON files found in {self.path}")
+        
+        task_data_dict = {}  # Store data grouped by task
+        
+        for json_file in json_files:
+            # Extract task name (filename without .json extension)
+            task_name = os.path.basename(json_file).replace('.json', '')
+            
+            try:
+                with open(json_file, 'r', encoding='utf-8') as f:
+                    task_data = json.load(f)
+                
+                task_examples = []
+                # Check data format and convert
+                if 'examples' in task_data:
+                    for example in task_data['examples']:
+                        # Convert input to prompt, target to answer
+                        processed_example = {
+                            'prompt': example.get('input', ''),
+                            'answer': example.get('target', ''),
+                            'task': task_name  # Add task identifier
+                        }
+                        task_examples.append(processed_example)
+                
+                task_data_dict[task_name] = task_examples
+                        
+            except Exception as e:
+                print(f"Error loading file {json_file}: {e}")
+                continue
+        
+        # Extract samples for each task
+        all_data = []
+        samples_per_task = 10  # Take 10 samples per task
+        
+        print(f"  Found {len(task_data_dict)} BBH tasks:")
+        for task_name, task_examples in task_data_dict.items():
+            if len(task_examples) < samples_per_task:
+                print(f"    {task_name}: Only {len(task_examples)} samples, less than {samples_per_task}")
+                selected_samples = task_examples
+            else:
+                # Randomly sample data
+                random.shuffle(task_examples)
+                selected_samples = task_examples[:samples_per_task]
+            
+            all_data.extend(selected_samples)
+            print(f"   {task_name}: {len(selected_samples)} samples")
+        
+        # Shuffle all data
+        random.shuffle(all_data)
+        
+        # Split data: 30% for validation, 70% for testing
+        split_idx = int(len(all_data) * 0.3)
+        
+        self.data = {
+            "train": all_data[:split_idx],
+            "test": all_data[split_idx:]
+        }
+        
+        print(f" Successfully loaded BBH multi-task dataset: {len(all_data)} samples")
+        print(f" Train/validation set: {len(self.data['train'])} samples")
+        print(f" Test set: {len(self.data['test'])} samples")
+        
+        # Display task distribution statistics
+        train_tasks = {}
+        test_tasks = {}
+        
+        for sample in self.data['train']:
+            task = sample.get('task', 'unknown')
+            train_tasks[task] = train_tasks.get(task, 0) + 1
+        
+        for sample in self.data['test']:
+            task = sample.get('task', 'unknown')
+            test_tasks[task] = test_tasks.get(task, 0) + 1
+        
+        print(f" Training set task distribution: {len(train_tasks)} tasks")
+        for task, count in sorted(train_tasks.items()):
+            print(f"    {task}: {count} samples")
+
+        print(f" Test set task distribution: {len(test_tasks)} tasks")
+        for task, count in sorted(test_tasks.items()):
+            print(f"    {task}: {count} samples") 
