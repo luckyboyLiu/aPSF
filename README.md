@@ -49,7 +49,7 @@ aPSF uses two LLM roles configured in `config.py` under `MODELS`:
 
 | Role | Purpose | Example |
 |------|---------|---------|
-| `architect` | Structure discovery & factor optimization | GPT-4o, Qwen3-8B, gpt-oss-120b |
+| `architect` | Structure discovery & factor optimization | Qwen3-8B, gpt-oss-120b |
 | `worker` | Task execution (answer generation) | Llama-3.1-8B, Qwen2.5-7B |
 
 ### Local LLM Support
