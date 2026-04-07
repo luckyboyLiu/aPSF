@@ -7,10 +7,10 @@
 
 ## Overview
 
-aPSF (Auto Prompt Structure Fusion) is an automatic prompt optimization framework that discovers and refines prompt structures through error-driven factor selection and multi-armed bandit (DAP-UCB) algorithms. Given a task description and a small set of examples, aPSF automatically:
+aPSF (Adaptive Prompt Structure Factorization) is an automatic prompt optimization framework that discovers and refines prompt structures through error-guided factor selection and interventional single-factor optimization. Given a task description and a small set of examples, aPSF automatically:
 
 1. **Discovers** the latent factor structure of a prompt (e.g., tone, format, perspective) via an Architect LLM.
-2. **Selects** the most impactful factor to refine at each step using a DAP-UCB bandit policy.
+2. **Selects** the most impactful factor to refine at each step using error-guided factor selection.
 3. **Optimizes** the selected factor with error-driven feedback, producing improved prompt candidates.
 4. **Evaluates** candidates with a unified scoring pipeline and accepts improvements.
 
@@ -27,7 +27,6 @@ aPSF (Auto Prompt Structure Fusion) is an automatic prompt optimization framewor
 ### Requirements
 
 - Python >= 3.9 (recommended 3.10 / 3.11)
-
 ```bash
 pip install -r requirements.txt
 ```
@@ -37,7 +36,6 @@ The core dependencies include `openai`, `torch`, `transformers`, `accelerate`, `
 ## API Configuration
 
 Set your API keys as environment variables (recommended) or edit `config.py` directly:
-
 ```bash
 export OPENAI_API_KEY="sk-..."
 export SILICONFLOW_API_KEY="..."
@@ -55,7 +53,6 @@ aPSF uses two LLM roles configured in `config.py` under `MODELS`:
 ### Local LLM Support
 
 aPSF is compatible with any OpenAI-compatible endpoint. For local deployment:
-
 ```bash
 # Ollama
 ollama run qwen2.5:7b
