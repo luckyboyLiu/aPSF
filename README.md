@@ -109,7 +109,7 @@ python run_experiments.py --dataset <DATASET> --method <METHOD> [OPTIONS]
 | Argument | Description |
 |----------|-------------|
 | `--dataset` | Dataset name (e.g., `gsm8k`, `bbh_all`, `mmlu`, `gpqa`) |
-| `--method` | Optimization method (see below) |
+| `--method` | Method to run: `apsf` or an ablation variant (see below) |
 
 **Optional arguments:**
 
