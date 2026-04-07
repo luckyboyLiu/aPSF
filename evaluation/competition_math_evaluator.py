@@ -307,9 +307,9 @@ Your judgment:"""
         if pred_norm == gold_norm:
             return True
         
-        # If LLM comparison is enabled and rule comparison fails, use LLM
-        if self.use_llm_comparison and hasattr(self, 'extractor_llm'):
-            return self._compare_answers_llm(pred, gold)
+        # If LLM comparison is enabled and rule comparison fails, use LLM as fallback
+        if self.use_llm_comparison and hasattr(self, 'extractor_llm') and self.extractor_llm:
+            return self._judge_answer_with_llm(pred, "", gold)
         
         return False
     
