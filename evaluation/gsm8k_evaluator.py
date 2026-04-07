@@ -71,10 +71,8 @@ Respond with only one word: YES or NO"""
 
         detailed_results = []
 
-        for i, prediction in enumerate(predictions):
-            if i >= len(eval_data):
-                break
-
+        for i in range(min(len(predictions), len(eval_data))):
+            prediction = predictions[i]
             target_answer = self._get_target_answer(eval_data[i])
 
             # Use LLM to directly judge correctness
