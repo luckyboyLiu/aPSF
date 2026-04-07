@@ -115,12 +115,10 @@ from .gsm8k_loader import GSM8KLoader
 from .bbh_loader import BBHLoader
 from .bbh_multi_task_loader import BBHMultiTaskLoader
 from .aqua_loader import AQuALoader
-from .humaneval_loader import HumanEvalLoader
 from .bbh_single_task_loader import BBHSingleTaskLoader
 from .multiarith_loader import MultiArithLoader
 from .gsm_hard_loader import GSMHardLoader
 from .mmlu_loader import MMLULoader
-from .mmlu_single_subject_loader import MMLUSingleSubjectLoader
 from .mmlu_all_subjects_loader import MMLUAllSubjectsLoader
 from .bbh_all_tasks_loader import BBHAllTasksLoader
 from .aime2025_loader import AIME2025Loader
@@ -134,11 +132,9 @@ LOADER_MAPPING = {
     "BBHMultiTaskLoader": BBHMultiTaskLoader,
     "BBHSingleTaskLoader": BBHSingleTaskLoader,
     "AQuALoader": AQuALoader,
-    "HumanEvalLoader": HumanEvalLoader,
     "GSMHardLoader": GSMHardLoader,
     "MultiArithLoader": MultiArithLoader,
     "MMLULoader": MMLULoader,
-    "MMLUSingleSubjectLoader": MMLUSingleSubjectLoader,
     "MMLUAllSubjectsLoader": MMLUAllSubjectsLoader,
     "BBHAllTasksLoader": BBHAllTasksLoader,
     "AIME2025Loader": AIME2025Loader,
@@ -169,12 +165,6 @@ def get_loader(dataset_name: str) -> BaseLoader:
             dataset_path = DATA_PATHS.get("bbh_all") or DATA_PATHS.get("bbh_hard") or "data/BIG-Bench-Hard-data"
         return BBHSingleTaskLoader(data_path=dataset_path, task_file=task_file)
     
-    if loader_class_name == "MMLUSingleSubjectLoader":
-        subject = config.get("subject")
-        if not dataset_path:
-            dataset_path = DATA_PATHS.get("mmlu") or "data/MMLU-data"
-        return MMLUSingleSubjectLoader(data_path=dataset_path, subject=subject)
-    
     # Support GPQALoader domain_filter and val_size parameters
     if loader_class_name == "GPQALoader":
         domain_filter = config.get("domain_filter", None)  # Get subject filter config
@@ -182,30 +172,3 @@ def get_loader(dataset_name: str) -> BaseLoader:
         return GPQALoader(path=dataset_path, domain_filter=domain_filter, val_size=val_size)
     
     return loader_class(path=dataset_path)
-# def get_loader(dataset_name: str) -> BaseLoader:
-#     """
-#     Factory function to get dataset loader instances.
-
-#     Args:
-#         dataset_name (str): Dataset name in config file (e.g., "gsm8k").
-
-#     Returns:
-#         BaseLoader: Instance of the corresponding dataset loader.
-#     """
-#     if dataset_name not in DATASET_CONFIG:
-#         raise ValueError(f"Dataset '{dataset_name}' not found in config.py.")
-    
-#     config = DATASET_CONFIG[dataset_name]
-#     loader_class_name = config.get("loader")
-    
-#     if loader_class_name not in LOADER_MAPPING:
-#         raise ValueError(f"Loader class '{loader_class_name}' not defined in LOADER_MAPPING.")
-        
-#     loader_class = LOADER_MAPPING[loader_class_name]
-#     dataset_path = DATA_PATHS.get(dataset_name)
-    
-#     if loader_class_name == "BBHSingleTaskLoader":
-#         task_file = config.get("task_file", "reasoning_about_colored_objects.json")
-#         return BBHSingleTaskLoader(data_path=dataset_path, task_file=task_file)
-    
-#     return loader_class(path=dataset_path) 
