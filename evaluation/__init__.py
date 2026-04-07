@@ -4,7 +4,6 @@ from .accuracy_evaluator import AccuracyEvaluator
 from .execution_evaluator import ExecutionEvaluator
 from .gsm8k_evaluator import GSM8KEvaluator
 from .aqua_evaluator import AQuAEvaluator
-from .web_of_lies_evaluator import WebOfLiesEvaluator
 from .multiarith_evaluator import MultiArithEvaluator
 from .gsm_hard_evaluator import GSMHardEvaluator
 from .mmlu_evaluator import MMLUEvaluator
@@ -17,7 +16,6 @@ EVALUATOR_MAPPING = {
     "GSM8KEvaluator": GSM8KEvaluator,
     "GSMHardEvaluator": GSMHardEvaluator,
     "AQuAEvaluator": AQuAEvaluator,
-    "WebOfLiesEvaluator": WebOfLiesEvaluator,
     "MultiArithEvaluator": MultiArithEvaluator,
     "MMLUEvaluator": MMLUEvaluator,
     "AIME2025Evaluator": AIME2025Evaluator,
