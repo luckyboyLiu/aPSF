@@ -21,7 +21,6 @@ aPSF (Auto Prompt Structure Fusion) is an automatic prompt optimization framewor
 | Math | `gsm8k`, `multiarith`, `gsm_hard`, `aime2025`, `competition_math` |
 | Logic | `aqua`, `bbh_all` (27 tasks), `bbh_<task_name>` |
 | Knowledge | `mmlu`, `mmlu_<subject>` (57 subjects), `gpqa`, `gpqa_<domain>` |
-| Code | `humaneval` |
 
 ## Installation
 
