@@ -38,38 +38,6 @@ logging.basicConfig(
     ]
 )
 
-# BBH task description mapping was removed
-# The dictionary definition below has been deleted
-# BBH_TASK_DESCRIPTIONS = {
-#     "boolean_expressions": "Evaluate complex boolean logic expressions with multiple operators and parentheses to determine the final truth value.",
-#     "causal_judgement": "Analyze scenarios to determine whether one event or action caused another based on logical reasoning.",
-#     "date_understanding": "Parse and comprehend date-related information to answer questions about temporal relationships.",
-#     "disambiguation_qa": "Resolve ambiguous references in questions by identifying the correct entity or meaning.",
-#     "dyck_languages": "Determine if sequences of brackets and parentheses are properly balanced and nested.",
-#     "formal_fallacies": "Identify logical fallacies in arguments and determine whether conclusions follow from premises.",
-#     "geometric_shapes": "Analyze geometric relationships, properties, and spatial reasoning problems.",
-#     "hyperbaton": "Identify the correct grammatical structure and word order in complex sentence constructions.",
-#     "logical_deduction_five_objects": "Use logical reasoning to determine the spatial arrangement or properties of five objects.",
-#     "logical_deduction_seven_objects": "Use logical reasoning to determine the spatial arrangement or properties of seven objects.",
-#     "logical_deduction_three_objects": "Use logical reasoning to determine the spatial arrangement or properties of three objects.",
-#     "movie_recommendation": "Analyze movie preferences and characteristics to make appropriate recommendations.",
-#     "multistep_arithmetic_two": "Solve arithmetic problems requiring multiple sequential calculation steps.",
-#     "navigate": "Determine directions and spatial relationships for navigation problems.",
-#     "object_counting": "Count objects accurately in complex scenarios with multiple categories or conditions.",
-#     "penguins_in_a_table": "Analyze tabular data about penguins to answer questions requiring logical reasoning.",
-#     "reasoning_about_colored_objects": "Apply logical reasoning to problems involving colored objects and their relationships.",
-#     "ruin_names": "Identify whether given names are real or artificially constructed/ruined versions.",
-#     "salient_translation_error_detection": "Identify significant errors in translations between languages.",
-#     "snarks": "Solve logical puzzles involving contradictory or paradoxical statements.",
-#     "sports_understanding": "Demonstrate understanding of sports rules, strategies, and scenarios.",
-#     "temporal_sequences": "Determine the correct chronological order of events or actions.",
-#     "tracking_shuffled_objects_five_objects": "Track the locations of five objects through a series of position changes.",
-#     "tracking_shuffled_objects_seven_objects": "Track the locations of seven objects through a series of position changes.",
-#     "tracking_shuffled_objects_three_objects": "Track the locations of three objects through a series of position changes.",
-#     "web_of_lies": "Determine truth and falsehood in complex scenarios with multiple contradictory statements.",
-#     "word_sorting": "Sort words according to specified criteria such as alphabetical order or other properties."
-# }
-
 def set_random_seed(seed=None):
     """Set random seed for reproducibility"""
     if seed is None:
