@@ -164,11 +164,3 @@ A: 1) Create a loader in `data_loader/` inheriting from `BaseLoader`. 2) Create 
 
 MIT License
 
-## Citation
-
-```bibtex
-@article{apsf2025,
-  title={aPSF: Auto Prompt Structure Fusion},
-  year={2025}
-}
-```
