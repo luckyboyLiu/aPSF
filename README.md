@@ -18,8 +18,6 @@
 ## News
 
 - **[2026.04.06]** 🎉 Our paper is accepted to ACL 2026 Main Conference!
-- **[2026.04]** Our paper is released on arXiv!
-- **[2026.04]** Code for Adaptive Prompt Structure Factorization is available now!
 
 ## Why Do We Need aPSF?
 
