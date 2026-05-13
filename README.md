@@ -9,6 +9,7 @@
 <h5 align="center">
 
 [![arXiv](https://img.shields.io/badge/arXiv-2604.06699-b31b1b.svg?logo=arXiv)](https://arxiv.org/abs/2604.06699)
+[![ACL 2026](https://img.shields.io/badge/ACL%202026-Main%20Conference-blue.svg)](https://arxiv.org/abs/2604.06699)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -16,6 +17,7 @@
 
 ## News
 
+- **[2026.04.06]** 🎉 Our paper is accepted to ACL 2026 Main Conference!
 - **[2026.04]** Our paper is released on arXiv!
 - **[2026.04]** Code for Adaptive Prompt Structure Factorization is available now!
 
