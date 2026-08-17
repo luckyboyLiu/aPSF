@@ -243,13 +243,12 @@ We are grateful for the following awesome projects and resources:
 If you find this project helpful, please consider citing our work:
 
 ```bibtex
-@misc{liu2026adaptivepromptstructurefactorization,
+@inproceedings{liu2026adaptive,
   title={Adaptive Prompt Structure Factorization: A Framework for Self-Discovering and Optimizing Compositional Prompt Programs},
-  author={Haoyue Liu and Zhichao Wang and Yongxin Guo and Haoran Shou and Xiaoying Tang},
-  year={2026},
-  eprint={2604.06699},
-  archivePrefix={arXiv},
-  primaryClass={cs.CL},
-  url={https://arxiv.org/abs/2604.06699}
+  author={Liu, Haoyue and Wang, Zhichao and Guo, Yongxin and Shou, Haoran and Tang, Xiaoying},
+  booktitle={Proceedings of the 64th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},
+  pages={11690--11714},
+  year={2026}
 }
+
 ```
